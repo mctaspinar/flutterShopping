@@ -42,7 +42,10 @@ class ProductOverViewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Alışveriş Uygulaması'),
+        title: Text(
+          'Alışveriş Uygulaması',
+          style: Theme.of(context).textTheme.headline6,
+        ),
       ),
       body: GridView.builder(
         padding: const EdgeInsets.all(10),
