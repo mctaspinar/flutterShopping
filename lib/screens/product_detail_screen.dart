@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping/widgets/app_bar.dart';
-import 'package:flutter_shopping/widgets/item_description.dart';
-import 'package:flutter_shopping/widgets/show_item_pic.dart';
+import '../providers/products_provider.dart';
+import 'package:provider/provider.dart';
+import '../widgets/app_bar.dart';
+import '../widgets/item_description.dart';
+import '../widgets/show_item_pic.dart';
 import '../models/product.dart';
 
 class ProductDetailScreen extends StatelessWidget {
@@ -14,19 +16,16 @@ class ProductDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Product product = ModalRoute.of(context).settings.arguments as Product;
-    final theme = Theme.of(context);
+    final productItem =
+        Provider.of<Products>(context, listen: false).findById(product.id);
     final mediaQuery = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(
         child: Stack(
           children: [
-            Column(
-              children: [
-                ShowItemPic(
-                  product: product,
-                ),
-              ],
+            ShowItemPic(
+              product: productItem,
             ),
             Positioned(
               left: 0,
@@ -34,7 +33,7 @@ class ProductDetailScreen extends StatelessWidget {
               child: CustomAppBar(
                 iconData: Icons.arrow_back,
                 toDo: _toDoFunction,
-                title: product.title,
+                title: productItem.title,
                 textStyle: Theme.of(context)
                     .textTheme
                     .headline6
@@ -45,7 +44,7 @@ class ProductDetailScreen extends StatelessWidget {
               bottom: mediaQuery.height * .1,
               right: 0,
               child: ItemDescription(
-                product: product,
+                product: productItem,
               ),
             )
           ],
