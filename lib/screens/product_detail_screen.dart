@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping/widgets/app_bar.dart';
 import '../models/product.dart';
 
 class ProductDetailScreen extends StatelessWidget {
@@ -12,6 +13,10 @@ class ProductDetailScreen extends StatelessWidget {
         fit: BoxFit.cover,
       ),
     );
+  }
+
+  void _toDoFunction(context) {
+    Navigator.of(context).pop();
   }
 
   @override
@@ -50,24 +55,14 @@ class ProductDetailScreen extends StatelessWidget {
             Positioned(
               left: 0,
               top: 0,
-              child: Row(
-                children: [
-                  IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: theme.primaryColor,
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      }),
-                  Text(
-                    product.title,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6
-                        .copyWith(color: Colors.black54),
-                  ),
-                ],
+              child: CustomAppBar(
+                iconData: Icons.arrow_back,
+                toDo: _toDoFunction,
+                title: product.title,
+                textStyle: Theme.of(context)
+                    .textTheme
+                    .headline6
+                    .copyWith(color: Colors.black54),
               ),
             ),
             Positioned(
