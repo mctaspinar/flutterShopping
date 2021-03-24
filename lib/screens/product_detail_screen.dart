@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping/widgets/app_bar.dart';
+import 'package:flutter_shopping/widgets/item_description.dart';
 import '../models/product.dart';
 
 class ProductDetailScreen extends StatelessWidget {
@@ -68,48 +69,8 @@ class ProductDetailScreen extends StatelessWidget {
             Positioned(
               bottom: mediaQuery.height * .1,
               right: 0,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black54,
-                ),
-                height: mediaQuery.height * .5,
-                width: mediaQuery.width * .8,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${product.description}',
-                        style: theme.textTheme.bodyText1.copyWith(
-                          fontSize: 24,
-                        ),
-                      ),
-                      Divider(
-                        color: theme.accentColor,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text('Fiyat ${product.price} ₺',
-                              style: theme.textTheme.bodyText1),
-                          ElevatedButton.icon(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.shopping_cart_outlined,
-                              color: Colors.white,
-                            ),
-                            label: Text(
-                              'Sepete Ekle',
-                              style: theme.textTheme.bodyText1,
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
+              child: ItemDescription(
+                product: product,
               ),
             )
           ],
