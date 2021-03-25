@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping/models/cart.dart';
+import 'package:flutter_shopping/widgets/badge.dart';
 import '../providers/products_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -33,55 +35,70 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productsProvider = Provider.of<Products>(context, listen: false);
-    return Row(
-      mainAxisAlignment: alignment,
-      children: [
-        IconButton(
-          icon: Icon(iconData),
-          onPressed: () => _iconFunction(context),
-        ),
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-          child: Text(
-            title,
-            style: textStyle,
+    return FittedBox(
+      child: Row(
+        mainAxisAlignment: alignment,
+        children: [
+          IconButton(
+            icon: Icon(iconData),
+            onPressed: () => _iconFunction(context),
           ),
-        ),
-        popupMenuButton
-            ? PopupMenuButton(
-                itemBuilder: (_) => [
-                  PopupMenuItem(
-                    child: Text(
-                      'Favori Ürünler',
-                      style: textStyle.copyWith(
-                        fontSize: 16,
-                        color: Colors.black87,
-                      ),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            child: Text(
+              title,
+              style: textStyle,
+            ),
+          ),
+          popupMenuButton
+              ? Row(
+                  children: [
+                    PopupMenuButton(
+                      itemBuilder: (_) => [
+                        PopupMenuItem(
+                          child: Text(
+                            'Favori Ürünler',
+                            style: textStyle.copyWith(
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          value: FilterOptions.Favorites,
+                        ),
+                        PopupMenuItem(
+                          child: Text(
+                            'Tüm Ürünler',
+                            style: textStyle.copyWith(
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          value: FilterOptions.All,
+                        ),
+                      ],
+                      icon: Icon(Icons.more_vert),
+                      onSelected: (FilterOptions filterOptionValue) {
+                        if (filterOptionValue == FilterOptions.Favorites) {
+                          productsProvider.showFavorites();
+                        } else {
+                          productsProvider.showAll();
+                        }
+                      },
                     ),
-                    value: FilterOptions.Favorites,
-                  ),
-                  PopupMenuItem(
-                    child: Text(
-                      'Tüm Ürünler',
-                      style: textStyle.copyWith(
-                        fontSize: 16,
-                        color: Colors.black87,
+                    Consumer<Cart>(
+                      builder: (_, cart, ch) => Badge(
+                        child: IconButton(
+                          icon: Icon(Icons.shopping_cart_outlined),
+                          onPressed: () {},
+                        ),
+                        value: cart.itemCount.toString(),
                       ),
-                    ),
-                    value: FilterOptions.All,
-                  ),
-                ],
-                icon: Icon(Icons.more_vert),
-                onSelected: (FilterOptions filterOptionValue) {
-                  if (filterOptionValue == FilterOptions.Favorites) {
-                    productsProvider.showFavorites();
-                  } else {
-                    productsProvider.showAll();
-                  }
-                },
-              )
-            : SizedBox()
-      ],
+                    )
+                  ],
+                )
+              : SizedBox()
+        ],
+      ),
     );
   }
 }

@@ -27,7 +27,7 @@ class ProductOverViewScreen extends StatelessWidget {
                 scaffoldState: scaffoldKey,
                 toDo: _openDrawer,
                 textStyle:
-                    theme.textTheme.headline6.copyWith(color: Colors.orange),
+                    theme.textTheme.headline6.copyWith(color: Colors.black87),
                 popupMenuButton: true,
                 alignment: MainAxisAlignment.spaceAround,
               ),

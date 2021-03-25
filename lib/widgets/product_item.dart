@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../screens/product_detail_screen.dart';
 import 'package:provider/provider.dart';
+
+import '../models/cart.dart';
+import '../screens/product_detail_screen.dart';
 import '../models/product.dart';
 
 class ProductItem extends StatelessWidget {
@@ -8,6 +10,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final product = Provider.of<Product>(context, listen: false);
+    final cart = Provider.of<Cart>(context, listen: false);
     //listen false diyerek sadece veriyi getirmesini istiyoruz
     //değişen veriden ui güncellemesi için consumer widgetı kullanıyoruz.
     return ClipRRect(
@@ -56,7 +59,9 @@ class ProductItem extends StatelessWidget {
               size: 22,
               color: theme.primaryColor,
             ),
-            onPressed: () {},
+            onPressed: () {
+              cart.addItem(product.id, product.price, product.title);
+            },
           ),
           title: Text(
             product.title,
