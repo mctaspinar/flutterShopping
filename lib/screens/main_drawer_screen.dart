@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping/screens/favorites_screen.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget _listTileBuilder(
@@ -52,20 +51,17 @@ class MainDrawer extends StatelessWidget {
           ),
         ),
         _listTileBuilder(
+            text: 'Giriş',
+            leadingData: Icons.login,
+            trailingData: Icons.arrow_forward,
+            theme: theme,
+            function: () {}),
+        _listTileBuilder(
             text: 'Sepetim',
             leadingData: Icons.shopping_cart_outlined,
             trailingData: Icons.arrow_forward,
             theme: theme,
             function: () {}),
-        _listTileBuilder(
-            text: 'Favorilerim',
-            leadingData: Icons.favorite_border,
-            trailingData: Icons.arrow_forward,
-            theme: theme,
-            function: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => FavoritesScreen()));
-            }),
       ],
     ));
   }
