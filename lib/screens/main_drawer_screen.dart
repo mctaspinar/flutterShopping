@@ -63,8 +63,6 @@ class MainDrawer extends StatelessWidget {
             trailingData: Icons.arrow_forward,
             theme: theme,
             function: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => FavoritesScreen()));
             }),
       ],
     ));
