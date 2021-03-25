@@ -19,7 +19,7 @@ class ProductOverViewScreen extends StatelessWidget {
         drawer: MainDrawer(),
         body: SafeArea(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               CustomAppBar(
                 iconData: Icons.menu,
@@ -29,7 +29,7 @@ class ProductOverViewScreen extends StatelessWidget {
                 textStyle:
                     theme.textTheme.headline6.copyWith(color: Colors.black87),
                 popupMenuButton: true,
-                alignment: MainAxisAlignment.spaceAround,
+                alignment: MainAxisAlignment.spaceBetween,
               ),
               CategoriesBar(),
               ProductsGridView(),
