@@ -7,7 +7,9 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final product = Provider.of<Product>(context);
+    final product = Provider.of<Product>(context, listen: false);
+    //listen false diyerek sadece veriyi getirmesini istiyoruz
+    //değişen veriden ui güncellemesi için consumer widgetı kullanıyoruz.
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -30,13 +32,18 @@ class ProductItem extends StatelessWidget {
             ),
             Positioned(
               right: 0,
-              child: IconButton(
-                icon: Icon(
-                  !product.isFavorite ? Icons.favorite_border : Icons.favorite,
+              //değişmesini istediğimiz yer
+              child: Consumer<Product>(
+                builder: (context, product, child) => IconButton(
+                  icon: Icon(
+                    !product.isFavorite
+                        ? Icons.favorite_border
+                        : Icons.favorite,
+                  ),
+                  onPressed: () {
+                    product.toggleFavorite();
+                  },
                 ),
-                onPressed: () {
-                  product.toggleFavorite();
-                },
               ),
             )
           ],

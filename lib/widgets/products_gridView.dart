@@ -18,8 +18,8 @@ class ProductsGridView extends StatelessWidget {
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
-        itemBuilder: (context, index) => ChangeNotifierProvider(
-          create: (ctx) => productsItem[index],
+        itemBuilder: (context, index) => ChangeNotifierProvider.value(
+          value: productsItem[index],
           child: ProductItem(),
         ),
       ),
