@@ -38,6 +38,8 @@ class ProductDetailScreen extends StatelessWidget {
                     .textTheme
                     .headline6
                     .copyWith(color: Colors.black54),
+                popupMenuButton: false,
+                alignment: MainAxisAlignment.start,
               ),
             ),
             Positioned(

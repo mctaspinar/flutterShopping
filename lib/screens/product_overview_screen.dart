@@ -28,6 +28,8 @@ class ProductOverViewScreen extends StatelessWidget {
                 toDo: _openDrawer,
                 textStyle:
                     theme.textTheme.headline6.copyWith(color: Colors.orange),
+                popupMenuButton: true,
+                alignment: MainAxisAlignment.spaceAround,
               ),
               CategoriesBar(),
               ProductsGridView(),

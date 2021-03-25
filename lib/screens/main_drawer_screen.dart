@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping/screens/favorites_screen.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget _listTileBuilder(
       {String text,
       IconData leadingData,
       IconData trailingData,
-      ThemeData theme}) {
+      ThemeData theme,
+      Function function}) {
     return ListTile(
-      onTap: () {},
+      onTap: function,
       title: Text(
         text,
         style: theme.textTheme.bodyText2,
@@ -50,17 +52,20 @@ class MainDrawer extends StatelessWidget {
           ),
         ),
         _listTileBuilder(
-          text: 'Sepetim',
-          leadingData: Icons.shopping_cart_outlined,
-          trailingData: Icons.arrow_forward,
-          theme: theme,
-        ),
+            text: 'Sepetim',
+            leadingData: Icons.shopping_cart_outlined,
+            trailingData: Icons.arrow_forward,
+            theme: theme,
+            function: () {}),
         _listTileBuilder(
-          text: 'Favorilerim',
-          leadingData: Icons.favorite_border,
-          trailingData: Icons.arrow_forward,
-          theme: theme,
-        ),
+            text: 'Favorilerim',
+            leadingData: Icons.favorite_border,
+            trailingData: Icons.arrow_forward,
+            theme: theme,
+            function: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => FavoritesScreen()));
+            }),
       ],
     ));
   }

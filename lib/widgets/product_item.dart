@@ -34,7 +34,7 @@ class ProductItem extends StatelessWidget {
               right: 0,
               //değişmesini istediğimiz yer
               child: Consumer<Product>(
-                builder: (context, product, child) => IconButton(
+                builder: (context, product, _) => IconButton(
                   icon: Icon(
                     !product.isFavorite
                         ? Icons.favorite_border
