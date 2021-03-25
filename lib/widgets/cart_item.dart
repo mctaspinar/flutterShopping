@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping/models/cart.dart';
+import 'package:provider/provider.dart';
 
 class CartItem extends StatefulWidget {
   final String id;
@@ -14,6 +16,7 @@ class CartItem extends StatefulWidget {
 class _CartItemState extends State<CartItem> {
   @override
   Widget build(BuildContext context) {
+    final deneme = Provider.of<Cart>(context);
     var _counter = widget.quantity;
     return ListTile(
       leading: Column(
@@ -26,7 +29,9 @@ class _CartItemState extends State<CartItem> {
               size: 30,
               color: Theme.of(context).primaryColor,
             ),
-            onPressed: () {},
+            onPressed: () {
+              deneme.deleteItem(widget.id);
+            },
           ),
         ],
       ),
