@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping/screens/favorites_screen.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget _listTileBuilder(
