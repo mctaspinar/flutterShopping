@@ -52,7 +52,7 @@ class CustomAppBar extends StatelessWidget {
                 itemBuilder: (_) => [
                   PopupMenuItem(
                     child: Text(
-                      'Favorileri Ürünler',
+                      'Favori Ürünler',
                       style: textStyle.copyWith(
                         fontSize: 16,
                         color: Colors.black87,
