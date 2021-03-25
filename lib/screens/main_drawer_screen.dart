@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'cart_screen.dart';
+
 class MainDrawer extends StatelessWidget {
-  Widget _listTileBuilder(
-      {String text,
-      IconData leadingData,
-      IconData trailingData,
-      ThemeData theme,
-      Function function}) {
+  Widget _listTileBuilder({
+    String text,
+    IconData leadingData,
+    IconData trailingData,
+    ThemeData theme,
+    Function function,
+  }) {
     return ListTile(
       onTap: function,
       title: Text(
@@ -60,7 +63,10 @@ class MainDrawer extends StatelessWidget {
             leadingData: Icons.shopping_cart_outlined,
             trailingData: Icons.arrow_forward,
             theme: theme,
-            function: () {}),
+            function: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (ctx) => CartScreen()));
+            }),
       ],
     ));
   }

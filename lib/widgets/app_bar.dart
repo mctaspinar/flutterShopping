@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping/models/cart.dart';
-import 'package:flutter_shopping/widgets/badge.dart';
+import '../models/cart.dart';
+import '../screens/cart_screen.dart';
+import '../widgets/badge.dart';
 import '../providers/products_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -89,7 +90,10 @@ class CustomAppBar extends StatelessWidget {
                       builder: (_, cart, ch) => Badge(
                         child: IconButton(
                           icon: Icon(Icons.shopping_cart_outlined),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushNamed(CartScreen.routeName);
+                          },
                         ),
                         value: cart.itemCount.toString(),
                       ),

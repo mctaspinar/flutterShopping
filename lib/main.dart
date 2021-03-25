@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping/models/cart.dart';
+
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import './screens/product_detail_screen.dart';
 import './screens/product_overview_screen.dart';
 import './providers/products_provider.dart';
-import 'models/cart.dart';
+import './models/cart.dart';
+import './screens/cart_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
         routes: {
           ('/'): (context) => ProductOverViewScreen(),
           ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
+          CartScreen.routeName: (context) => CartScreen(),
         },
       ),
     );
