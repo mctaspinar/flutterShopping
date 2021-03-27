@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'cart_screen.dart';
+import '../screens/order_screen.dart';
+import '../screens/cart_screen.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget _listTileBuilder({
@@ -25,7 +26,7 @@ class MainDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Drawer(
-        child: ListView(
+        child: Column(
       children: [
         DrawerHeader(
           decoration: BoxDecoration(
@@ -37,12 +38,18 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           child: Container(
+            width: MediaQuery.of(context).size.width,
             child: Column(
               children: [
-                Icon(
-                  Icons.shopping_basket,
-                  size: 80,
-                  color: Colors.white,
+                GestureDetector(
+                  child: Icon(
+                    Icons.shopping_basket,
+                    size: 80,
+                    color: Colors.white,
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
                 Text(
                   'Alışveriş Uygulaması',
@@ -57,15 +64,24 @@ class MainDrawer extends StatelessWidget {
             leadingData: Icons.login,
             trailingData: Icons.arrow_forward,
             theme: theme,
-            function: () {}),
+            function: () {
+              Navigator.of(context).pop();
+            }),
         _listTileBuilder(
             text: 'Sepetim',
             leadingData: Icons.shopping_cart_outlined,
             trailingData: Icons.arrow_forward,
             theme: theme,
             function: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (ctx) => CartScreen()));
+              Navigator.of(context).popAndPushNamed(CartScreen.routeName);
+            }),
+        _listTileBuilder(
+            text: 'Siparişlerim',
+            leadingData: Icons.local_shipping_outlined,
+            trailingData: Icons.arrow_forward,
+            theme: theme,
+            function: () {
+              Navigator.of(context).popAndPushNamed(OrdersScreen.routeName);
             }),
       ],
     ));
