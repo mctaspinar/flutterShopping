@@ -16,66 +16,87 @@ class CartItem extends StatefulWidget {
 class _CartItemState extends State<CartItem> {
   @override
   Widget build(BuildContext context) {
-    final deneme = Provider.of<Cart>(context);
+    final cartFunction = Provider.of<Cart>(context, listen: false);
     var _counter = widget.quantity;
-    return ListTile(
-      leading: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          IconButton(
-            icon: Icon(
-              Icons.delete,
-              size: 30,
-              color: Theme.of(context).primaryColor,
-            ),
-            onPressed: () {
-              deneme.deleteItem(widget.id);
-            },
-          ),
-        ],
+    return Dismissible(
+      key: ValueKey(widget.id),
+      background: Container(
+        color: Theme.of(context).primaryColor,
+        child: Icon(
+          Icons.delete,
+          size: 40,
+          color: Colors.white,
+        ),
+        alignment: Alignment.centerRight,
+        margin: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 5,
+        ),
+        padding: const EdgeInsets.only(right: 20),
       ),
-      title: Text("${widget.title}"),
-      subtitle: Text(
-          "$_counter adet ${(widget.quantity * widget.price).toStringAsFixed(2)} ₺  "),
-      trailing: FittedBox(
-        child: Container(
-          child: Row(
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.add,
-                  size: 15,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _counter++;
-                  });
-                },
+      direction: DismissDirection.endToStart,
+      onDismissed: (direction) {
+        cartFunction.deleteItem(widget.id);
+      },
+      child: ListTile(
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: Icon(
+                Icons.delete,
+                size: 30,
+                color: Theme.of(context).primaryColor,
               ),
-              Container(
-                width: 20,
-                child: Text(
-                  "$_counter",
-                  textAlign: TextAlign.center,
+              onPressed: () {
+                cartFunction.deleteItem(widget.id);
+              },
+            ),
+          ],
+        ),
+        title: Text("${widget.title}"),
+        subtitle: Text(
+            "$_counter adet ${(widget.quantity * widget.price).toStringAsFixed(2)} ₺  "),
+        trailing: FittedBox(
+          child: Container(
+            child: Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.add,
+                    size: 15,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _counter++;
+                    });
+                  },
                 ),
-              ),
-              IconButton(
-                icon: Icon(
-                  Icons.remove,
-                  size: 15,
+                Container(
+                  width: 20,
+                  child: Text(
+                    "$_counter",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                onPressed: () {
-                  setState(() {
-                    if (_counter < 2) {
-                      _counter = 1;
-                    } else {
-                      _counter--;
-                    }
-                  });
-                },
-              ),
-            ],
+                IconButton(
+                  icon: Icon(
+                    Icons.remove,
+                    size: 15,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      if (_counter < 2) {
+                        _counter = 1;
+                      } else {
+                        _counter--;
+                      }
+                    });
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -11,7 +11,6 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  var _counter = 1;
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
@@ -43,34 +42,40 @@ class _CartScreenState extends State<CartScreen> {
               : Expanded(
                   child: Column(
                     children: [
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: FittedBox(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  "Toplam ${cart.totalQuantity} adet ürün ${cart.totalAmount.toStringAsFixed(2)} ₺",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText2
-                                      .copyWith(fontSize: 16),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      ElevatedButton.icon(
-                                        onPressed: () {},
-                                        icon: Icon(Icons.check_circle_outline),
-                                        label: Text("Sipariş Ver"),
-                                      )
-                                    ],
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: FittedBox(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    "Toplam ${cart.totalQuantity} adet ürün ${cart.totalAmount.toStringAsFixed(2)} ₺",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText2
+                                        .copyWith(fontSize: 16),
                                   ),
-                                )
-                              ],
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        ElevatedButton.icon(
+                                          onPressed: () {},
+                                          icon:
+                                              Icon(Icons.check_circle_outline),
+                                          label: Text("Sipariş Ver"),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
