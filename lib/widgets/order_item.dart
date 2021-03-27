@@ -21,7 +21,8 @@ class _OrderItemsState extends State<OrderItems> {
       child: Column(
         children: [
           ListTile(
-            title: Text('${widget.order.amount}₺ tutarındaki siparişiniz.'),
+            title: Text(
+                '${widget.order.amount.toStringAsFixed(2)}₺ tutarındaki siparişiniz.'),
             subtitle: Text('Sipariş Tarihi : $date'),
             trailing: IconButton(
               icon: Icon(
