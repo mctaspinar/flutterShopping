@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/cart.dart' show Cart;
 import '../widgets/app_bar.dart';
 import '../widgets/cart_item.dart';
+import '../models/orders.dart';
 import 'package:provider/provider.dart';
 
 class CartScreen extends StatefulWidget {
@@ -11,6 +12,20 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  bool _loading = false;
+
+  void _submit() {
+    setState(() {
+      _loading = true;
+    });
+
+    Future.delayed(Duration(seconds: 2), () {
+      setState(() {
+        _loading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
@@ -36,8 +51,36 @@ class _CartScreenState extends State<CartScreen> {
               ? Padding(
                   padding: const EdgeInsets.only(top: 30),
                   child: Center(
-                    child: Text("Sepetiniz Boş."),
-                  ),
+                      child: Column(
+                    children: [
+                      _loading
+                          ? Icon(
+                              Icons.local_shipping_outlined,
+                              size: 64,
+                            )
+                          : SizedBox(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        !_loading ? "Sepetiniz Boş." : "Siparişiniz Verildi!",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText2
+                            .copyWith(fontSize: 24),
+                      ),
+                      !_loading
+                          ? TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("Hadi alışverişe başla!"),
+                              style:
+                                  TextButton.styleFrom(primary: Colors.orange),
+                            )
+                          : SizedBox(),
+                    ],
+                  )),
                 )
               : Expanded(
                   child: Column(
@@ -66,7 +109,16 @@ class _CartScreenState extends State<CartScreen> {
                                           MainAxisAlignment.center,
                                       children: [
                                         ElevatedButton.icon(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Provider.of<Orders>(context,
+                                                    listen: false)
+                                                .addOrders(
+                                              cart.items.values.toList(),
+                                              cart.totalAmount,
+                                            );
+                                            cart.clear();
+                                            _submit();
+                                          },
                                           icon:
                                               Icon(Icons.check_circle_outline),
                                           label: Text("Sipariş Ver"),
