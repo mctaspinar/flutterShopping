@@ -14,6 +14,32 @@ class CartItem extends StatefulWidget {
 }
 
 class _CartItemState extends State<CartItem> {
+  Widget _buildAlertDialog(BuildContext context) {
+    return AlertDialog(
+      title: Text(
+        "Emin Misiniz?",
+        style: Theme.of(context).textTheme.bodyText1.copyWith(
+              color: Colors.black,
+              fontSize: 24,
+            ),
+      ),
+      content: Text("Bu ürün sepetinizden çıkarılacaktır.",
+          style: Theme.of(context).textTheme.bodyText2),
+      actions: [
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+            child: Text("Hayır")),
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+            child: Text("Evet")),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final cartFunction = Provider.of<Cart>(context);
@@ -34,6 +60,13 @@ class _CartItemState extends State<CartItem> {
         padding: const EdgeInsets.only(right: 20),
       ),
       direction: DismissDirection.endToStart,
+      confirmDismiss: (value) {
+        return showDialog(
+            context: context,
+            builder: (_) {
+              return _buildAlertDialog(context);
+            });
+      },
       onDismissed: (direction) {
         cartFunction.deleteItem(widget.id);
       },
@@ -49,7 +82,13 @@ class _CartItemState extends State<CartItem> {
                 color: Theme.of(context).primaryColor,
               ),
               onPressed: () {
-                cartFunction.deleteItem(widget.id);
+                return showDialog(
+                        context: context,
+                        builder: (_) {
+                          return _buildAlertDialog(context);
+                        })
+                    .then((value) =>
+                        value ? cartFunction.deleteItem(widget.id) : null);
               },
             ),
           ],
