@@ -61,6 +61,12 @@ class ProductItem extends StatelessWidget {
             ),
             onPressed: () {
               cart.addItem(product.id, product.price, product.title);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("${product.title} sepete eklendi."),
+                  duration: Duration(seconds: 1),
+                ),
+              );
             },
           ),
           title: Text(
