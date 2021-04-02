@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../screens/order_screen.dart';
 import '../screens/cart_screen.dart';
+import '../screens/edit_procut_screen.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget _listTileBuilder({
@@ -82,6 +83,15 @@ class MainDrawer extends StatelessWidget {
             theme: theme,
             function: () {
               Navigator.of(context).popAndPushNamed(OrdersScreen.routeName);
+            }),
+        _listTileBuilder(
+            text: 'Ürünleri Yönet',
+            leadingData: Icons.edit,
+            trailingData: Icons.arrow_forward,
+            theme: theme,
+            function: () {
+              Navigator.of(context)
+                  .popAndPushNamed(EditProductScreen.routeName);
             }),
       ],
     ));
