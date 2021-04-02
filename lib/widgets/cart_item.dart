@@ -16,8 +16,7 @@ class CartItem extends StatefulWidget {
 class _CartItemState extends State<CartItem> {
   @override
   Widget build(BuildContext context) {
-    final cartFunction = Provider.of<Cart>(context, listen: false);
-    var _counter = widget.quantity;
+    final cartFunction = Provider.of<Cart>(context);
     return Dismissible(
       key: ValueKey(widget.id),
       background: Container(
@@ -57,47 +56,9 @@ class _CartItemState extends State<CartItem> {
         ),
         title: Text("${widget.title}"),
         subtitle: Text(
-            "$_counter adet ${(widget.quantity * widget.price).toStringAsFixed(2)} ₺  "),
+            "${widget.quantity} adet ${(widget.quantity * widget.price).toStringAsFixed(2)} ₺  "),
         trailing: FittedBox(
-          child: Container(
-            child: Row(
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.add,
-                    size: 15,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _counter++;
-                    });
-                  },
-                ),
-                Container(
-                  width: 20,
-                  child: Text(
-                    "$_counter",
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.remove,
-                    size: 15,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      if (_counter < 2) {
-                        _counter = 1;
-                      } else {
-                        _counter--;
-                      }
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
+          child: Text("${widget.quantity} x Adet"),
         ),
       ),
     );
