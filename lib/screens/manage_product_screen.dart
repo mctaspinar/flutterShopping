@@ -4,17 +4,22 @@ import 'package:provider/provider.dart';
 import '../widgets/app_bar.dart';
 import '../widgets/edit_item.dart';
 
+import '../screens/edit_product_screen.dart';
+
 import '../providers/products_provider.dart';
 
-class EditProductScreen extends StatelessWidget {
-  static const routeName = '/editProducts';
+class ManageProductScreen extends StatelessWidget {
+  static const routeName = '/manageProducts';
   @override
   Widget build(BuildContext context) {
     final providedProduct = Provider.of<Products>(context).items;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamed(EditProductScreen.routeName,
+              arguments: ['Yeni Ürün Ekle']);
+        },
       ),
       body: SafeArea(
         child: Column(
@@ -41,8 +46,7 @@ class EditProductScreen extends StatelessWidget {
                     return Column(
                       children: [
                         EditItem(
-                          imgUrl: providedProduct[index].imageUrl,
-                          title: providedProduct[index].title,
+                          product: providedProduct[index],
                         ),
                         Divider(),
                       ],

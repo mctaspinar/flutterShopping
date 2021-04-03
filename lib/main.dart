@@ -9,7 +9,8 @@ import './screens/product_detail_screen.dart';
 import './screens/product_overview_screen.dart';
 import './screens/order_screen.dart';
 import './screens/cart_screen.dart';
-import './screens/edit_procut_screen.dart';
+import './screens/manage_product_screen.dart';
+import './screens/edit_product_screen.dart';
 
 import './models/cart.dart';
 import './models/orders.dart';
@@ -71,6 +72,7 @@ class MyApp extends StatelessWidget {
           ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
           CartScreen.routeName: (context) => CartScreen(),
           OrdersScreen.routeName: (context) => OrdersScreen(),
+          ManageProductScreen.routeName: (context) => ManageProductScreen(),
           EditProductScreen.routeName: (context) => EditProductScreen(),
         },
       ),

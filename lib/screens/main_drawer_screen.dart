@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../screens/order_screen.dart';
 import '../screens/cart_screen.dart';
-import '../screens/edit_procut_screen.dart';
+import 'manage_product_screen.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget _listTileBuilder({
@@ -91,7 +91,7 @@ class MainDrawer extends StatelessWidget {
             theme: theme,
             function: () {
               Navigator.of(context)
-                  .popAndPushNamed(EditProductScreen.routeName);
+                  .popAndPushNamed(ManageProductScreen.routeName);
             }),
       ],
     ));
