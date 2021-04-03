@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-import '../models/product.dart';
-
 import '../screens/edit_product_screen.dart';
 
 class EditItem extends StatelessWidget {
-  final Product product;
-  EditItem({this.product});
+  final String title;
+  final String imgUrl;
+  final String id;
+  EditItem({this.title, this.id, this.imgUrl});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: CircleAvatar(
-        backgroundImage: NetworkImage(product.imageUrl),
+        backgroundImage: NetworkImage(imgUrl),
       ),
-      title: Text(product.title),
+      title: Text(title),
       trailing: FittedBox(
         child: Row(
           children: [
@@ -24,8 +24,8 @@ class EditItem extends StatelessWidget {
                   color: Theme.of(context).accentColor,
                 ),
                 onPressed: () {
-                  Navigator.of(context).pushNamed(EditProductScreen.routeName,
-                      arguments: ['Ürünü Düzenle', product]);
+                  Navigator.of(context)
+                      .pushNamed(EditProductScreen.routeName, arguments: id);
                 }),
             IconButton(
                 icon: Icon(

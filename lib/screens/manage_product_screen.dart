@@ -17,8 +17,7 @@ class ManageProductScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator.of(context).pushNamed(EditProductScreen.routeName,
-              arguments: ['Yeni Ürün Ekle']);
+          Navigator.of(context).pushNamed(EditProductScreen.routeName);
         },
       ),
       body: SafeArea(
@@ -46,7 +45,9 @@ class ManageProductScreen extends StatelessWidget {
                     return Column(
                       children: [
                         EditItem(
-                          product: providedProduct[index],
+                          id: providedProduct[index].id,
+                          imgUrl: providedProduct[index].imageUrl,
+                          title: providedProduct[index].title,
                         ),
                         Divider(),
                       ],
