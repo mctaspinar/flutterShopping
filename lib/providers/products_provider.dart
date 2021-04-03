@@ -64,6 +64,11 @@ class Products with ChangeNotifier {
     return _items.firstWhere((element) => element.id == id);
   }
 
+  void deleteProduct(String id) {
+    _items.removeWhere((element) => element.id == id);
+    notifyListeners();
+  }
+
   void showFavorites() {
     _showFavorite = true;
     notifyListeners();
@@ -72,5 +77,13 @@ class Products with ChangeNotifier {
   void showAll() {
     _showFavorite = false;
     notifyListeners();
+  }
+
+  void updateProduct(String id, Product product) {
+    final productIndex = _items.indexWhere((element) => element.id == id);
+    if (productIndex >= 0) {
+      _items[productIndex] = product;
+      notifyListeners();
+    } else {}
   }
 }

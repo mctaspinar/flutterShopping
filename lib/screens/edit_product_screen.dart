@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_shopping/models/product.dart';
-import 'package:flutter_shopping/providers/products_provider.dart';
 import 'package:provider/provider.dart';
+
+import '../models/product.dart';
+
+import '../providers/products_provider.dart';
 
 import '../widgets/app_bar.dart';
 
@@ -82,23 +84,26 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   void _saveForm() {
     final _isValid = _formKey.currentState.validate();
-    if (_isValid) {
-      _formKey.currentState.save();
-      Provider.of<Products>(context, listen: false).addProduct(_product);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("${_product.title} ürünü eklenmiştir."),
-          duration: Duration(milliseconds: 850),
-        ),
-      );
-      _initValues = {
-        'title': "",
-        'description': "",
-        'price': "",
-        'imageUrl': '',
-      };
-      _imageUrlController.text = "";
+    var control;
+    if (!_isValid) {
+      return;
     }
+    _formKey.currentState.save();
+    if (_product.id != null) {
+      Provider.of<Products>(context, listen: false)
+          .updateProduct(_product.id, _product);
+      control = "güncellenmiştir.";
+    } else {
+      Provider.of<Products>(context, listen: false).addProduct(_product);
+      control = "eklenmiştir.";
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("${_product.title} ürünü $control."),
+        duration: Duration(seconds: 1),
+      ),
+    );
+    Navigator.of(context).pop();
   }
 
   @override
@@ -144,7 +149,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         },
                         onSaved: (value) {
                           _product = Product(
-                            id: null,
+                            id: _product.id,
+                            isFavorite: _product.isFavorite,
                             title: value,
                             description: _product.description,
                             price: _product.price,
@@ -170,7 +176,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         },
                         onSaved: (value) {
                           _product = Product(
-                            id: null,
+                            id: _product.id,
+                            isFavorite: _product.isFavorite,
                             title: _product.title,
                             description: _product.description,
                             price: double.parse(value),
@@ -200,7 +207,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         focusNode: _descriptionFocusNode,
                         onSaved: (value) {
                           _product = Product(
-                            id: null,
+                            id: _product.id,
+                            isFavorite: _product.isFavorite,
                             title: _product.title,
                             description: value,
                             price: _product.price,
@@ -229,7 +237,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         },
                         onSaved: (value) {
                           _product = Product(
-                            id: null,
+                            id: _product.id,
+                            isFavorite: _product.isFavorite,
                             title: _product.title,
                             description: _product.description,
                             price: _product.price,
