@@ -10,6 +10,10 @@ import '../providers/products_provider.dart';
 
 class ManageProductScreen extends StatelessWidget {
   static const routeName = '/manageProducts';
+  Future<void> _refreshProducts(BuildContext context) async {
+    await Provider.of<Products>(context, listen: false).getAllProducts();
+  }
+
   @override
   Widget build(BuildContext context) {
     final providedProduct = Provider.of<Products>(context).items;
@@ -34,25 +38,28 @@ class ManageProductScreen extends StatelessWidget {
               textStyle: Theme.of(context)
                   .textTheme
                   .headline6
-                  .copyWith(color: Colors.black54),
+                  .copyWith(color: Colors.black),
               popupMenuButton: false,
               alignment: MainAxisAlignment.start,
             ),
             Expanded(
-              child: ListView.builder(
-                  itemCount: providedProduct.length,
-                  itemBuilder: (_, index) {
-                    return Column(
-                      children: [
-                        EditItem(
-                          id: providedProduct[index].id,
-                          imgUrl: providedProduct[index].imageUrl,
-                          title: providedProduct[index].title,
-                        ),
-                        Divider(),
-                      ],
-                    );
-                  }),
+              child: RefreshIndicator(
+                onRefresh: () => _refreshProducts(context),
+                child: ListView.builder(
+                    itemCount: providedProduct.length,
+                    itemBuilder: (_, index) {
+                      return Column(
+                        children: [
+                          EditItem(
+                            id: providedProduct[index].id,
+                            imgUrl: providedProduct[index].imageUrl,
+                            title: providedProduct[index].title,
+                          ),
+                          Divider(),
+                        ],
+                      );
+                    }),
+              ),
             ),
           ],
         ),

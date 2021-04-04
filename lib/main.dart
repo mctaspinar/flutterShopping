@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.orange,
-          accentColor: Colors.yellow,
+          accentColor: Colors.yellow[600],
           iconTheme: IconThemeData(color: Colors.orange),
           textTheme: GoogleFonts.montserratTextTheme().copyWith(
               bodyText1: GoogleFonts.quicksand(

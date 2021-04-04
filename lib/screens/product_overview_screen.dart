@@ -1,13 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping/providers/products_provider.dart';
+import 'package:provider/provider.dart';
 import '../widgets/products_gridView.dart';
 import '../widgets/app_bar.dart';
 import '../widgets/categories_bar.dart';
 import './main_drawer_screen.dart';
 
-class ProductOverViewScreen extends StatelessWidget {
+class ProductOverViewScreen extends StatefulWidget {
+  @override
+  _ProductOverViewScreenState createState() => _ProductOverViewScreenState();
+}
+
+class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   void _openDrawer() {
     scaffoldKey.currentState.openDrawer();
+  }
+
+  var _isInit = true;
+  var _isLoading = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Products>(context).getAllProducts().then((value) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   @override
@@ -32,7 +65,11 @@ class ProductOverViewScreen extends StatelessWidget {
                 alignment: MainAxisAlignment.spaceBetween,
               ),
               CategoriesBar(),
-              ProductsGridView(),
+              _isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : ProductsGridView(),
             ],
           ),
         ));

@@ -29,6 +29,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     imageUrl: '',
   );
   var _isInit = true;
+  var _isLoading = false;
   var _initValues = {
     'title': '',
     'description': '',
@@ -72,38 +73,63 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.dispose();
   }
 
-  void _saveProduct() {
-    setState(() {});
-  }
-
   void _updateImageUrl() {
     if (!_imageFocusNode.hasFocus) {
       setState(() {});
     }
   }
 
-  void _saveForm() {
+  Future<void> _saveForm() async {
     final _isValid = _formKey.currentState.validate();
-    var control;
     if (!_isValid) {
       return;
     }
     _formKey.currentState.save();
+    setState(() {
+      _isLoading = true;
+    });
     if (_product.id != null) {
-      Provider.of<Products>(context, listen: false)
+      await Provider.of<Products>(context, listen: false)
           .updateProduct(_product.id, _product);
-      control = "güncellenmiştir.";
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.of(context).pop();
     } else {
-      Provider.of<Products>(context, listen: false).addProduct(_product);
-      control = "eklenmiştir.";
+      try {
+        await Provider.of<Products>(context, listen: false)
+            .addProduct(_product);
+      } catch (error) {
+        await showDialog<Null>(
+            context: context,
+            builder: (ctx) {
+              return AlertDialog(
+                title: Text(
+                  "Bir hata oluştu!",
+                  style: Theme.of(context).textTheme.bodyText1.copyWith(
+                        color: Colors.black,
+                      ),
+                ),
+                content: Text(
+                  "Alınana Hata :\n ${error.toString()}",
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(ctx).pop();
+                      },
+                      child: Text("Tamam")),
+                ],
+              );
+            });
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.of(context).pop();
+      }
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("${_product.title} ürünü $control."),
-        duration: Duration(seconds: 1),
-      ),
-    );
-    Navigator.of(context).pop();
   }
 
   @override
@@ -126,178 +152,188 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   textStyle: Theme.of(context)
                       .textTheme
                       .headline6
-                      .copyWith(color: Colors.black54),
+                      .copyWith(color: Colors.black),
                   popupMenuButton: false,
                   alignment: MainAxisAlignment.start,
                 ),
                 IconButton(icon: Icon(Icons.save), onPressed: _saveForm),
               ],
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Form(
-                  key: _formKey,
-                  child: ListView(
-                    children: [
-                      TextFormField(
-                        initialValue: _initValues['title'],
-                        decoration: InputDecoration(labelText: 'Ürün adı'),
-                        textInputAction: TextInputAction.next,
-                        onFieldSubmitted: (_) {
-                          FocusScope.of(context).requestFocus(_priceFocusNode);
-                        },
-                        onSaved: (value) {
-                          _product = Product(
-                            id: _product.id,
-                            isFavorite: _product.isFavorite,
-                            title: value,
-                            description: _product.description,
-                            price: _product.price,
-                            imageUrl: _product.imageUrl,
-                          );
-                        },
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return "Lütfen ürün başlığı giriniz!";
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        initialValue: _initValues['price'],
-                        decoration: InputDecoration(labelText: 'Ürün fiyatı'),
-                        textInputAction: TextInputAction.next,
-                        keyboardType: TextInputType.number,
-                        focusNode: _priceFocusNode,
-                        onFieldSubmitted: (value) {
-                          FocusScope.of(context)
-                              .requestFocus(_descriptionFocusNode);
-                        },
-                        onSaved: (value) {
-                          _product = Product(
-                            id: _product.id,
-                            isFavorite: _product.isFavorite,
-                            title: _product.title,
-                            description: _product.description,
-                            price: double.parse(value),
-                            imageUrl: _product.imageUrl,
-                          );
-                        },
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return "Lütfen ürün fiyatını giriniz!";
-                          }
-                          if (double.tryParse(value) == null) {
-                            return "Lütfen geçerli bir fiyat giriniz!";
-                          }
-                          if (double.parse(value) <= 0) {
-                            return "Lütfen 0'dan büyük bir fiyat giriniz!";
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        initialValue: _initValues['description'],
-                        decoration:
-                            InputDecoration(labelText: 'Ürün açıklaması'),
-                        maxLines: 3,
-                        keyboardType: TextInputType.multiline,
-                        textInputAction: TextInputAction.next,
-                        focusNode: _descriptionFocusNode,
-                        onSaved: (value) {
-                          _product = Product(
-                            id: _product.id,
-                            isFavorite: _product.isFavorite,
-                            title: _product.title,
-                            description: value,
-                            price: _product.price,
-                            imageUrl: _product.imageUrl,
-                          );
-                        },
-                        validator: (value) {
-                          if (value.trim().isEmpty) {
-                            return "Lütfen ürün açıklamaısını giriniz!";
-                          }
-                          if (value.trim().length <= 10) {
-                            return "Ürün açıklaması yetersiz!";
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        decoration:
-                            InputDecoration(labelText: 'Ürün resim linki'),
-                        textInputAction: TextInputAction.done,
-                        controller: _imageUrlController,
-                        keyboardType: TextInputType.url,
-                        focusNode: _imageFocusNode,
-                        onFieldSubmitted: (_) {
-                          _saveForm();
-                        },
-                        onSaved: (value) {
-                          _product = Product(
-                            id: _product.id,
-                            isFavorite: _product.isFavorite,
-                            title: _product.title,
-                            description: _product.description,
-                            price: _product.price,
-                            imageUrl: value,
-                          );
-                        },
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return "Lütfen ürün resim linki giriniz!";
-                          }
-                          if (!value.startsWith("http") &&
-                              !value.startsWith("https")) {
-                            return "Lütfen geçerli bir link giriniz!";
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(border: Border.all()),
-                        child: Image.network(
-                          _imageUrlController.text,
-                          fit: BoxFit.fill,
-                          loadingBuilder: (BuildContext context, Widget child,
-                              ImageChunkEvent loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes !=
-                                        null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes
-                                    : null,
-                              ),
-                            );
-                          },
-                          errorBuilder: (BuildContext context, Object exception,
-                              StackTrace stackTrace) {
-                            return Center(
-                                child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: _imageUrlController.text.isEmpty
-                                  ? Text("Resim linkini giriniz.")
-                                  : Text(
-                                      'Resim yüklenirken bir hata oluştu. Lütfen farklı bir resim adresi deneyiniz.',
-                                      textAlign: TextAlign.center,
+            _isLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Form(
+                        key: _formKey,
+                        child: ListView(
+                          children: [
+                            TextFormField(
+                              initialValue: _initValues['title'],
+                              decoration:
+                                  InputDecoration(labelText: 'Ürün adı'),
+                              textInputAction: TextInputAction.next,
+                              onFieldSubmitted: (_) {
+                                FocusScope.of(context)
+                                    .requestFocus(_priceFocusNode);
+                              },
+                              onSaved: (value) {
+                                _product = Product(
+                                  id: _product.id,
+                                  isFavorite: _product.isFavorite,
+                                  title: value,
+                                  description: _product.description,
+                                  price: _product.price,
+                                  imageUrl: _product.imageUrl,
+                                );
+                              },
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return "Lütfen ürün başlığı giriniz!";
+                                }
+                                return null;
+                              },
+                            ),
+                            TextFormField(
+                              initialValue: _initValues['price'],
+                              decoration:
+                                  InputDecoration(labelText: 'Ürün fiyatı'),
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.number,
+                              focusNode: _priceFocusNode,
+                              onFieldSubmitted: (value) {
+                                FocusScope.of(context)
+                                    .requestFocus(_descriptionFocusNode);
+                              },
+                              onSaved: (value) {
+                                _product = Product(
+                                  id: _product.id,
+                                  isFavorite: _product.isFavorite,
+                                  title: _product.title,
+                                  description: _product.description,
+                                  price: double.parse(value),
+                                  imageUrl: _product.imageUrl,
+                                );
+                              },
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return "Lütfen ürün fiyatını giriniz!";
+                                }
+                                if (double.tryParse(value) == null) {
+                                  return "Lütfen geçerli bir fiyat giriniz!";
+                                }
+                                if (double.parse(value) <= 0) {
+                                  return "Lütfen 0'dan büyük bir fiyat giriniz!";
+                                }
+                                return null;
+                              },
+                            ),
+                            TextFormField(
+                              initialValue: _initValues['description'],
+                              decoration:
+                                  InputDecoration(labelText: 'Ürün açıklaması'),
+                              maxLines: 3,
+                              keyboardType: TextInputType.multiline,
+                              textInputAction: TextInputAction.next,
+                              focusNode: _descriptionFocusNode,
+                              onSaved: (value) {
+                                _product = Product(
+                                  id: _product.id,
+                                  isFavorite: _product.isFavorite,
+                                  title: _product.title,
+                                  description: value,
+                                  price: _product.price,
+                                  imageUrl: _product.imageUrl,
+                                );
+                              },
+                              validator: (value) {
+                                if (value.trim().isEmpty) {
+                                  return "Lütfen ürün açıklamaısını giriniz!";
+                                }
+                                if (value.trim().length <= 10) {
+                                  return "Ürün açıklaması yetersiz!";
+                                }
+                                return null;
+                              },
+                            ),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                  labelText: 'Ürün resim linki'),
+                              textInputAction: TextInputAction.done,
+                              controller: _imageUrlController,
+                              keyboardType: TextInputType.url,
+                              focusNode: _imageFocusNode,
+                              onFieldSubmitted: (_) {
+                                _saveForm();
+                              },
+                              onSaved: (value) {
+                                _product = Product(
+                                  id: _product.id,
+                                  isFavorite: _product.isFavorite,
+                                  title: _product.title,
+                                  description: _product.description,
+                                  price: _product.price,
+                                  imageUrl: value,
+                                );
+                              },
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return "Lütfen ürün resim linki giriniz!";
+                                }
+                                if (!value.startsWith("http") &&
+                                    !value.startsWith("https")) {
+                                  return "Lütfen geçerli bir link giriniz!";
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              margin: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(border: Border.all()),
+                              child: Image.network(
+                                _imageUrlController.text,
+                                fit: BoxFit.fill,
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value: loadingProgress
+                                                  .expectedTotalBytes !=
+                                              null
+                                          ? loadingProgress
+                                                  .cumulativeBytesLoaded /
+                                              loadingProgress.expectedTotalBytes
+                                          : null,
                                     ),
-                            ));
-                          },
+                                  );
+                                },
+                                errorBuilder: (BuildContext context,
+                                    Object exception, StackTrace stackTrace) {
+                                  return Center(
+                                      child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: _imageUrlController.text.isEmpty
+                                        ? Text("Resim linkini giriniz.")
+                                        : Text(
+                                            'Resim yüklenirken bir hata oluştu. Lütfen farklı bir resim adresi deneyiniz.',
+                                            textAlign: TextAlign.center,
+                                          ),
+                                  ));
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
