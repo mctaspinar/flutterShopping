@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/cart.dart';
-import '../screens/product_detail_screen.dart';
+import '../models/auth.dart';
 import '../models/product.dart';
+
+import '../screens/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
   @override
@@ -11,6 +13,7 @@ class ProductItem extends StatelessWidget {
     final theme = Theme.of(context);
     final product = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
+    final auth = Provider.of<Auth>(context, listen: false);
     //listen false diyerek sadece veriyi getirmesini istiyoruz
     //değişen veriden ui güncellemesi için consumer widgetı kullanıyoruz.
     return ClipRRect(
@@ -44,7 +47,7 @@ class ProductItem extends StatelessWidget {
                         : Icons.favorite,
                   ),
                   onPressed: () {
-                    product.toggleFavorite();
+                    product.toggleFavorite(auth.token);
                   },
                 ),
               ),
