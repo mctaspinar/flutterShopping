@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import './screens/auth_screen.dart';
 import './screens/product_detail_screen.dart';
 import './screens/product_overview_screen.dart';
 import './screens/order_screen.dart';
@@ -49,6 +50,23 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
+          appBarTheme: AppBarTheme(
+            color: Colors.white,
+            elevation: 0,
+            brightness: Brightness.light,
+            textTheme: GoogleFonts.quicksandTextTheme(
+              Theme.of(context).textTheme.copyWith(
+                    headline6: GoogleFonts.quicksand(
+                            textStyle: Theme.of(context).textTheme.headline6)
+                        .copyWith(
+                      fontSize: 24,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+            ),
+          ),
+          errorColor: Colors.brown[400],
           primarySwatch: Colors.orange,
           accentColor: Colors.yellow[600],
           iconTheme: IconThemeData(color: Colors.orange),
@@ -68,7 +86,8 @@ class MyApp extends StatelessWidget {
               )),
         ),
         routes: {
-          ('/'): (context) => ProductOverViewScreen(),
+          ('/'): (context) => AuthScreen(),
+          ProductOverViewScreen.routeName: (context) => ProductOverViewScreen(),
           ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
           CartScreen.routeName: (context) => CartScreen(),
           OrdersScreen.routeName: (context) => OrdersScreen(),

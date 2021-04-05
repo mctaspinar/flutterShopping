@@ -7,6 +7,7 @@ import '../widgets/categories_bar.dart';
 import './main_drawer_screen.dart';
 
 class ProductOverViewScreen extends StatefulWidget {
+  static const routeName = '/logged-Screen';
   @override
   _ProductOverViewScreenState createState() => _ProductOverViewScreenState();
 }
