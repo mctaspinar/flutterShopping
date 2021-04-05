@@ -5,37 +5,11 @@ import '../models/orders.dart';
 import '../widgets/app_bar.dart';
 import '../widgets/order_item.dart';
 
-class OrdersScreen extends StatefulWidget {
+class OrdersScreen extends StatelessWidget {
   static const routeName = '/orders';
 
   @override
-  _OrdersScreenState createState() => _OrdersScreenState();
-}
-
-class _OrdersScreenState extends State<OrdersScreen> {
-  var _isInit = true;
-  var _isLoading = false;
-
-  @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<Orders>(context).getAllOrders().then((value) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    }
-    _isInit = false;
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final order = Provider.of<Orders>(context);
-    final orderList = order.orders;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -54,40 +28,64 @@ class _OrdersScreenState extends State<OrdersScreen> {
               popupMenuButton: false,
               alignment: MainAxisAlignment.start,
             ),
-            orderList.length == 0
-                ? Center(
-                    child: Padding(
-                        padding: const EdgeInsets.only(top: 30),
-                        child: Column(
-                          children: [
-                            Text(
-                              "Siparişiniz bulunmamaktadır.",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText2
-                                  .copyWith(fontSize: 22),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text("Haydi alışverişe başla!"))
-                          ],
-                        )),
-                  )
-                : Expanded(
-                    child: _isLoading
-                        ? Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : ListView.builder(
-                            itemCount: orderList.length,
-                            itemBuilder: (ctx, index) {
-                              return OrderItems(orderList[index]);
-                            })),
+            Expanded(
+              child: FutureBuilder(
+                future:
+                    Provider.of<Orders>(context, listen: false).getAllOrders(),
+                builder: (context, dataSnapShot) {
+                  if (dataSnapShot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    if (dataSnapShot.error != null) {
+                      return Text(
+                        "Bir hata oluştu!",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText2
+                            .copyWith(fontSize: 22),
+                      );
+                    } else {
+                      return Consumer<Orders>(
+                        builder: (ctx, orderData, child) {
+                          return orderData.orders.length == 0
+                              ? Center(
+                                  child: Padding(
+                                      padding: const EdgeInsets.only(top: 30),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            "Siparişiniz bulunmamaktadır.",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText2
+                                                .copyWith(fontSize: 22),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text(
+                                                  "Haydi alışverişe başla!"))
+                                        ],
+                                      )),
+                                )
+                              : ListView.builder(
+                                  itemCount: orderData.orders.length,
+                                  itemBuilder: (ctx, index) {
+                                    return OrderItems(orderData.orders[index]);
+                                  });
+                        },
+                      );
+                    }
+                  }
+                },
+              ),
+            ),
           ],
         ),
       ),
