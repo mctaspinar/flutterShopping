@@ -19,23 +19,15 @@ class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
     scaffoldKey.currentState.openDrawer();
   }
 
-  var _isInit = true;
-  var _isLoading = false;
+  Future _future;
+  Future getFuture() {
+    return Provider.of<Products>(context, listen: false).getAllProducts();
+  }
 
   @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<Products>(context).getAllProducts().then((value) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    }
-    _isInit = false;
-    super.didChangeDependencies();
+  void initState() {
+    _future = getFuture();
+    super.initState();
   }
 
   @override
@@ -60,11 +52,17 @@ class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
                 alignment: MainAxisAlignment.spaceBetween,
               ),
               CategoriesBar(),
-              _isLoading
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : ProductsGridView(),
+              FutureBuilder(
+                  future: _future,
+                  builder: (ctx, snapData) {
+                    if (snapData.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      return ProductsGridView();
+                    }
+                  }),
             ],
           ),
         ));

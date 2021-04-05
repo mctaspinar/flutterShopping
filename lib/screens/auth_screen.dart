@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import '../models/auth.dart';
 import '../screens/product_overview_screen.dart';
@@ -32,33 +30,21 @@ class AuthScreen extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                Container(
-                  margin: EdgeInsets.only(bottom: 20.0),
-                  padding:
-                      EdgeInsets.symmetric(vertical: 8.0, horizontal: 94.0),
-                  transform: Matrix4.rotationZ(-8 * pi / 180)..translate(-10.0),
-                  // ..translate(-10.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.orange,
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 8,
-                        color: Colors.black26,
-                        offset: Offset(0, 2),
-                      )
-                    ],
+                Icon(
+                  Icons.shopping_basket_outlined,
+                  color: Theme.of(context).primaryColor,
+                  size: 96,
+                ),
+                Text(
+                  'Alışveriş Uygulaması',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w600,
                   ),
-                  child: FittedBox(
-                    child: Text(
-                      'HOŞGELDİNİZ',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+                ),
+                SizedBox(
+                  height: 20,
                 ),
                 AuthCard(),
               ],
@@ -98,17 +84,24 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-    if (_authMode == AuthMode.Login) {
-      // Log user in
-      await Provider.of<Auth>(context, listen: false)
-          .logIn(_authData['email'], _authData['password'])
-          .then((value) => Navigator.of(context)
-              .popAndPushNamed(ProductOverViewScreen.routeName));
-    } else {
-      // Sign user up
-      await Provider.of<Auth>(context, listen: false)
-          .signUp(_authData['email'], _authData['password']);
+    try {
+      if (_authMode == AuthMode.Login) {
+        //Log user in
+        await Provider.of<Auth>(context, listen: false)
+            .logIn(_authData['email'], _authData['password'])
+            .then((value) => Navigator.of(context)
+                .popAndPushNamed(ProductOverViewScreen.routeName));
+      } else {
+        //Sign user up
+        await Provider.of<Auth>(context, listen: false)
+            .signUp(_authData['email'], _authData['password']);
+      }
+    } catch (error) {
+      var message = error.toString();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
     }
+
     setState(() {
       _isLoading = false;
     });

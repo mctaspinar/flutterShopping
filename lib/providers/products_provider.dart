@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import '../models/product.dart';
 
 class Products with ChangeNotifier {
+  final String authToken;
+  Products(this.authToken, this._items);
   List<Product> _items = [];
 
   var _showFavorite = false;
@@ -20,7 +22,7 @@ class Products with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     Uri url = Uri.parse(
-        "https://shopping-project-d3268-default-rtdb.firebaseio.com/products.json");
+        "https://shopping-project-d3268-default-rtdb.firebaseio.com/products.json?auth=$authToken");
     try {
       final response = await http.post(
         url,
@@ -52,7 +54,7 @@ class Products with ChangeNotifier {
 
   Future<void> getAllProducts() async {
     Uri url = Uri.parse(
-        "https://shopping-project-d3268-default-rtdb.firebaseio.com/products.json");
+        "https://shopping-project-d3268-default-rtdb.firebaseio.com/products.json?auth=$authToken");
     try {
       final response = await http.get(url);
       final data = json.decode(response.body) as Map<String, dynamic>;
@@ -84,7 +86,7 @@ class Products with ChangeNotifier {
 
   void deleteProduct(String id) {
     Uri url = Uri.parse(
-        "https://shopping-project-d3268-default-rtdb.firebaseio.com/products/$id.json");
+        "https://shopping-project-d3268-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken");
     final existingProductIndex =
         _items.indexWhere((element) => element.id == id);
     var existingProduct = _items[existingProductIndex];
@@ -113,7 +115,7 @@ class Products with ChangeNotifier {
     final productIndex = _items.indexWhere((element) => element.id == id);
     if (productIndex >= 0) {
       Uri url = Uri.parse(
-          "https://shopping-project-d3268-default-rtdb.firebaseio.com/products/$id.json");
+          "https://shopping-project-d3268-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken");
       await http.patch(url,
           body: json.encode({
             'title': product.title,
