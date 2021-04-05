@@ -22,12 +22,6 @@ class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
   var _isLoading = false;
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
   void didChangeDependencies() {
     if (_isInit) {
       setState(() {

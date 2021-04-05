@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping/screens/order_screen.dart';
 import '../models/cart.dart' show Cart;
 import '../widgets/app_bar.dart';
 import '../widgets/cart_item.dart';
@@ -14,16 +15,12 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   bool _loading = false;
 
-  void _submit() {
+  Future<void> _submit() async {
     setState(() {
       _loading = true;
     });
 
-    Future.delayed(Duration(seconds: 2), () {
-      setState(() {
-        _loading = false;
-      });
-    });
+    await Future.delayed(Duration(milliseconds: 1500), () {});
   }
 
   @override
@@ -43,7 +40,7 @@ class _CartScreenState extends State<CartScreen> {
             textStyle: Theme.of(context)
                 .textTheme
                 .headline6
-                .copyWith(color: Colors.black54),
+                .copyWith(color: Colors.black),
             popupMenuButton: false,
             alignment: MainAxisAlignment.start,
           ),
@@ -53,32 +50,24 @@ class _CartScreenState extends State<CartScreen> {
                   child: Center(
                       child: Column(
                     children: [
-                      _loading
-                          ? Icon(
-                              Icons.local_shipping_outlined,
-                              size: 64,
-                            )
-                          : SizedBox(),
                       SizedBox(
                         height: 10,
                       ),
                       Text(
-                        !_loading ? "Sepetiniz Boş." : "Siparişiniz Verildi!",
+                        "Sepetiniz boş.",
                         style: Theme.of(context)
                             .textTheme
                             .bodyText2
-                            .copyWith(fontSize: 24),
+                            .copyWith(fontSize: 22),
                       ),
-                      !_loading
-                          ? TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text("Hadi alışverişe başla!"),
-                              style:
-                                  TextButton.styleFrom(primary: Colors.orange),
-                            )
-                          : SizedBox(),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .popAndPushNamed(OrdersScreen.routeName);
+                        },
+                        child: Text("Siparişlerinize göz atın."),
+                        style: TextButton.styleFrom(primary: Colors.orange),
+                      )
                     ],
                   )),
                 )
@@ -109,19 +98,28 @@ class _CartScreenState extends State<CartScreen> {
                                           MainAxisAlignment.center,
                                       children: [
                                         ElevatedButton.icon(
-                                          onPressed: () {
-                                            Provider.of<Orders>(context,
-                                                    listen: false)
-                                                .addOrders(
-                                              cart.items.values.toList(),
-                                              cart.totalAmount,
-                                            );
-                                            cart.clear();
-                                            _submit();
-                                          },
-                                          icon:
-                                              Icon(Icons.check_circle_outline),
-                                          label: Text("Sipariş Ver"),
+                                          onPressed: _loading
+                                              ? null
+                                              : () async {
+                                                  await _submit();
+                                                  await Provider.of<Orders>(
+                                                          context,
+                                                          listen: false)
+                                                      .addOrders(
+                                                    cart.items.values.toList(),
+                                                    cart.totalAmount,
+                                                  );
+                                                  setState(() {
+                                                    _loading = false;
+                                                  });
+                                                  cart.clear();
+                                                },
+                                          icon: Icon(_loading
+                                              ? Icons.check_circle_outline
+                                              : Icons.local_shipping_outlined),
+                                          label: Text(_loading
+                                              ? "Siparişinizi Aldık!"
+                                              : "Sipariş Ver"),
                                         )
                                       ],
                                     ),

@@ -17,7 +17,7 @@ class CategoriesBar extends StatelessWidget {
     final theme = Theme.of(context);
     return Container(
       width: mediaQuery.size.width,
-      height: mediaQuery.size.height * .07,
+      height: mediaQuery.size.height * .08,
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
