@@ -15,6 +15,7 @@ import './screens/edit_product_screen.dart';
 
 import './models/cart.dart';
 import './models/orders.dart';
+import './models/auth.dart';
 
 import './providers/products_provider.dart';
 
@@ -36,6 +37,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => Orders(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => Auth(),
         )
       ],
       child: MaterialApp(

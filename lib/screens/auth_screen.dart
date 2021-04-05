@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping/screens/product_overview_screen.dart';
+import '../models/auth.dart';
+import '../screens/product_overview_screen.dart';
+import 'package:provider/provider.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -87,7 +89,7 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
-  void _submit() {
+  void _submit() async {
     if (!_formKey.currentState.validate()) {
       // Invalid!
       return;
@@ -98,9 +100,14 @@ class _AuthCardState extends State<AuthCard> {
     });
     if (_authMode == AuthMode.Login) {
       // Log user in
-      Navigator.of(context).popAndPushNamed(ProductOverViewScreen.routeName);
+      await Provider.of<Auth>(context, listen: false)
+          .logIn(_authData['email'], _authData['password'])
+          .then((value) => Navigator.of(context)
+              .popAndPushNamed(ProductOverViewScreen.routeName));
     } else {
       // Sign user up
+      await Provider.of<Auth>(context, listen: false)
+          .signUp(_authData['email'], _authData['password']);
     }
     setState(() {
       _isLoading = false;
@@ -218,8 +225,8 @@ class _AuthCardState extends State<AuthCard> {
                   ),
                 ),
               TextButton(
-                child:
-                    Text('${_authMode == AuthMode.Login ? 'Üye ol' : 'Giriş'}'),
+                child: Text(
+                    '${_authMode == AuthMode.Login ? 'Üye ol' : 'Giriş yap'}'),
                 onPressed: _switchAuthMode,
                 style: TextButton.styleFrom(
                     padding:
