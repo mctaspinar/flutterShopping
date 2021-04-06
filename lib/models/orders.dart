@@ -59,7 +59,7 @@ class Orders with ChangeNotifier {
 
   Future<void> getAllOrders() async {
     Uri url = Uri.parse(
-        "https://shopping-project-d3268-default-rtdb.firebaseio.com/orders.json?auth=$authToken");
+        "https://shopping-project-d3268-default-rtdb.firebaseio.com/orders/$userId.json?auth=$authToken");
     final response = await http.get(url);
     print(json.decode(response.body));
     final List<OrderItem> loadedOrders = [];

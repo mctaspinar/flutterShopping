@@ -55,12 +55,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     );
                   } else {
                     if (dataSnapShot.error != null) {
-                      return Text(
-                        "Bir hata oluştu!",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText2
-                            .copyWith(fontSize: 22),
+                      return Center(
+                        child: Text(
+                          "Bir hata oluştu!",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText2
+                              .copyWith(fontSize: 22),
+                        ),
                       );
                     } else {
                       return Consumer<Orders>(
