@@ -7,7 +7,8 @@ import '../models/product.dart';
 
 class Products with ChangeNotifier {
   final String authToken;
-  Products(this.authToken, this._items);
+  final String userId;
+  Products(this.authToken, this.userId, this._items);
   List<Product> _items = [];
 
   var _showFavorite = false;
@@ -31,7 +32,6 @@ class Products with ChangeNotifier {
           'description': product.description,
           'imageUrl': product.imageUrl,
           'price': product.price,
-          'isFavorite': product.isFavorite,
         }),
       );
 
@@ -53,14 +53,18 @@ class Products with ChangeNotifier {
   }
 
   Future<void> getAllProducts() async {
-    Uri url = Uri.parse(
+    var url = Uri.parse(
         "https://shopping-project-d3268-default-rtdb.firebaseio.com/products.json?auth=$authToken");
     try {
       final response = await http.get(url);
       final data = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> tempList = [];
       if (data == null) return;
-      print(json.decode(response.body));
+      url = Uri.parse(
+          "https://shopping-project-d3268-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authToken");
+      final favResponse = await http.get(url);
+      final favData = json.decode(favResponse.body);
+      //print(json.decode(response.body));
       data.forEach((productID, productData) {
         tempList.add(
           Product(
@@ -69,7 +73,7 @@ class Products with ChangeNotifier {
             price: productData['price'],
             description: productData['description'],
             imageUrl: productData['imageUrl'],
-            isFavorite: productData['isFavorite'],
+            isFavorite: favData == null ? false : favData[productID] ?? false,
           ),
         );
       });
