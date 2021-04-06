@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../models/auth.dart';
 
 import '../screens/order_screen.dart';
 import '../screens/cart_screen.dart';
-import 'manage_product_screen.dart';
+import '../screens/manage_product_screen.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget _listTileBuilder({
@@ -61,14 +64,6 @@ class MainDrawer extends StatelessWidget {
           ),
         ),
         _listTileBuilder(
-            text: 'Giriş',
-            leadingData: Icons.login,
-            trailingData: Icons.arrow_forward,
-            theme: theme,
-            function: () {
-              Navigator.of(context).pop();
-            }),
-        _listTileBuilder(
             text: 'Sepetim',
             leadingData: Icons.shopping_cart_outlined,
             trailingData: Icons.arrow_forward,
@@ -85,13 +80,24 @@ class MainDrawer extends StatelessWidget {
               Navigator.of(context).popAndPushNamed(OrdersScreen.routeName);
             }),
         _listTileBuilder(
-            text: 'Ürünleri Yönet',
+            text: 'Ürünlerim',
             leadingData: Icons.edit,
             trailingData: Icons.arrow_forward,
             theme: theme,
             function: () {
               Navigator.of(context)
                   .popAndPushNamed(ManageProductScreen.routeName);
+            }),
+        _listTileBuilder(
+            text: 'Çıkış',
+            leadingData: Icons.logout,
+            trailingData: Icons.arrow_forward,
+            theme: theme,
+            function: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacementNamed('/');
+
+              Provider.of<Auth>(context, listen: false).logOut();
             }),
       ],
     ));

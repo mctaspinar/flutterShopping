@@ -97,7 +97,8 @@ class MyApp extends StatelessWidget {
           ),
           home: authData.isAuth ? ProductOverViewScreen() : AuthScreen(),
           routes: {
-            //('/'): (context) => AuthScreen(),
+            // ('/'): (context) =>
+            //     authData.isAuth ? ProductOverViewScreen() : AuthScreen(),
             ProductOverViewScreen.routeName: (context) =>
                 ProductOverViewScreen(),
             ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
