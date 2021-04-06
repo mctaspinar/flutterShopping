@@ -11,12 +11,11 @@ import '../providers/products_provider.dart';
 class ManageProductScreen extends StatelessWidget {
   static const routeName = '/manageProducts';
   Future<void> _refreshProducts(BuildContext context) async {
-    await Provider.of<Products>(context, listen: false).getAllProducts();
+    await Provider.of<Products>(context, listen: false).getAllProducts(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final providedProduct = Provider.of<Products>(context).items;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -43,22 +42,36 @@ class ManageProductScreen extends StatelessWidget {
               alignment: MainAxisAlignment.start,
             ),
             Expanded(
-              child: RefreshIndicator(
-                onRefresh: () => _refreshProducts(context),
-                child: ListView.builder(
-                    itemCount: providedProduct.length,
-                    itemBuilder: (_, index) {
-                      return Column(
-                        children: [
-                          EditItem(
-                            id: providedProduct[index].id,
-                            imgUrl: providedProduct[index].imageUrl,
-                            title: providedProduct[index].title,
-                          ),
-                          Divider(),
-                        ],
-                      );
-                    }),
+              child: FutureBuilder(
+                future: _refreshProducts(context),
+                builder: (context, snapData) {
+                  if (snapData.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    return RefreshIndicator(
+                      onRefresh: () => _refreshProducts(context),
+                      child: Consumer<Products>(
+                        builder: (ctx, providedProduct, _) => ListView.builder(
+                            itemCount: providedProduct.items.length,
+                            itemBuilder: (_, index) {
+                              return Column(
+                                children: [
+                                  EditItem(
+                                    id: providedProduct.items[index].id,
+                                    imgUrl:
+                                        providedProduct.items[index].imageUrl,
+                                    title: providedProduct.items[index].title,
+                                  ),
+                                  Divider(),
+                                ],
+                              );
+                            }),
+                      ),
+                    );
+                  }
+                },
               ),
             ),
           ],
