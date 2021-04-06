@@ -5,6 +5,7 @@ import '../widgets/app_bar.dart';
 import '../widgets/edit_item.dart';
 
 import '../screens/edit_product_screen.dart';
+import '../widgets/empty_page.dart';
 
 import '../providers/products_provider.dart';
 
@@ -16,6 +17,10 @@ class ManageProductScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _navigate() {
+      Navigator.of(context).pushNamed(EditProductScreen.routeName);
+    }
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -51,21 +56,30 @@ class ManageProductScreen extends StatelessWidget {
                     );
                   } else {
                     return Consumer<Products>(
-                      builder: (ctx, providedProduct, _) => ListView.builder(
-                          itemCount: providedProduct.userItems.length,
-                          itemBuilder: (_, index) {
-                            return Column(
-                              children: [
-                                EditItem(
-                                  id: providedProduct.userItems[index].id,
-                                  imgUrl:
-                                      providedProduct.userItems[index].imageUrl,
-                                  title: providedProduct.userItems[index].title,
-                                ),
-                                Divider(),
-                              ],
-                            );
-                          }),
+                      builder: (ctx, providedProduct, _) {
+                        return providedProduct.userItems.isEmpty
+                            ? EmptyPage(
+                                title: "Ürününüz bulunmamaktadır.",
+                                buttonTitle: "Haydi yeni ürün ekle!",
+                                navigatePage: _navigate,
+                              )
+                            : ListView.builder(
+                                itemCount: providedProduct.userItems.length,
+                                itemBuilder: (_, index) {
+                                  return Column(
+                                    children: [
+                                      EditItem(
+                                        id: providedProduct.userItems[index].id,
+                                        imgUrl: providedProduct
+                                            .userItems[index].imageUrl,
+                                        title: providedProduct
+                                            .userItems[index].title,
+                                      ),
+                                      Divider(),
+                                    ],
+                                  );
+                                });
+                      },
                     );
                   }
                 },

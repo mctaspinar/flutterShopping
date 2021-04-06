@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_shopping/screens/order_screen.dart';
+import '../screens/order_screen.dart';
 import '../models/cart.dart' show Cart;
 import '../widgets/app_bar.dart';
 import '../widgets/cart_item.dart';
+import '../widgets/empty_page.dart';
 import '../models/orders.dart';
 import 'package:provider/provider.dart';
 
@@ -25,6 +26,10 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    void _navigate() {
+      Navigator.of(context).popAndPushNamed(OrdersScreen.routeName);
+    }
+
     final cart = Provider.of<Cart>(context);
     return Scaffold(
       body: SafeArea(
@@ -45,31 +50,10 @@ class _CartScreenState extends State<CartScreen> {
             alignment: MainAxisAlignment.start,
           ),
           cart.itemCount == 0
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 30),
-                  child: Center(
-                      child: Column(
-                    children: [
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Sepetiniz boş.",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText2
-                            .copyWith(fontSize: 22),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .popAndPushNamed(OrdersScreen.routeName);
-                        },
-                        child: Text("Siparişlerinize göz atın."),
-                        style: TextButton.styleFrom(primary: Colors.orange),
-                      )
-                    ],
-                  )),
+              ? EmptyPage(
+                  title: "Sepetiniz boş.",
+                  buttonTitle: "Siparişlerinize göz atın.",
+                  navigatePage: _navigate,
                 )
               : Expanded(
                   child: Column(

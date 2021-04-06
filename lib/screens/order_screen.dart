@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/orders.dart';
 import '../widgets/app_bar.dart';
 import '../widgets/order_item.dart';
+import '../widgets/empty_page.dart';
 
 class OrdersScreen extends StatefulWidget {
   static const routeName = '/orders';
@@ -27,6 +28,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    void _navigate() {
+      Navigator.of(context).pop();
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -69,28 +74,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         builder: (ctx, orderData, child) {
                           return orderData.orders.length == 0
                               ? Center(
-                                  child: Padding(
-                                      padding: const EdgeInsets.only(top: 30),
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            "Siparişiniz bulunmamaktadır.",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText2
-                                                .copyWith(fontSize: 22),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Text(
-                                                  "Haydi alışverişe başla!"))
-                                        ],
-                                      )),
+                                  child: EmptyPage(
+                                    title: "Siparişiniz bulunmamaktadır.",
+                                    buttonTitle: "Haydi alışverişe başla!",
+                                    navigatePage: _navigate,
+                                  ),
                                 )
                               : ListView.builder(
                                   itemCount: orderData.orders.length,
