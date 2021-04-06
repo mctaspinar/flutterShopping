@@ -12,6 +12,7 @@ import './screens/order_screen.dart';
 import './screens/cart_screen.dart';
 import './screens/manage_product_screen.dart';
 import './screens/edit_product_screen.dart';
+import './screens/splash_screen.dart';
 
 import './models/cart.dart';
 import './models/orders.dart';
@@ -100,7 +101,17 @@ class _MyAppState extends State<MyApp> {
                   fontWeight: FontWeight.w300,
                 )),
           ),
-          home: authData.isAuth ? ProductOverViewScreen() : AuthScreen(),
+          home: authData.isAuth
+              ? ProductOverViewScreen()
+              : FutureBuilder(
+                  future: authData.autoLogin(),
+                  builder: (context, snapData) {
+                    if (snapData.connectionState == ConnectionState.waiting) {
+                      return SplashScreen();
+                    } else {
+                      return AuthScreen();
+                    }
+                  }),
           routes: routes(authData),
         ),
       ),
