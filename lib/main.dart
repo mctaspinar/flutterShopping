@@ -24,7 +24,12 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -57,7 +62,7 @@ class MyApp extends StatelessWidget {
             const Locale('tr', 'TR  '),
           ],
           debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
+          title: 'Alışveriş Uygulaması',
           theme: ThemeData(
             appBarTheme: AppBarTheme(
               color: Colors.white,
@@ -96,19 +101,28 @@ class MyApp extends StatelessWidget {
                 )),
           ),
           home: authData.isAuth ? ProductOverViewScreen() : AuthScreen(),
-          routes: {
-            // ('/'): (context) =>
-            //     authData.isAuth ? ProductOverViewScreen() : AuthScreen(),
-            ProductOverViewScreen.routeName: (context) =>
-                ProductOverViewScreen(),
-            ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
-            CartScreen.routeName: (context) => CartScreen(),
-            OrdersScreen.routeName: (context) => OrdersScreen(),
-            ManageProductScreen.routeName: (context) => ManageProductScreen(),
-            EditProductScreen.routeName: (context) => EditProductScreen(),
-          },
+          routes: routes(authData),
         ),
       ),
     );
+  }
+
+  Map<String, WidgetBuilder> routes(Auth authData) {
+    return {
+      // ('/'): (context) =>
+      //     authData.isAuth ? ProductOverViewScreen() : AuthScreen(),
+      ProductOverViewScreen.routeName: (context) =>
+          authData.isAuth ? ProductOverViewScreen() : AuthScreen(),
+      ProductDetailScreen.routeName: (context) =>
+          authData.isAuth ? ProductDetailScreen() : AuthScreen(),
+      CartScreen.routeName: (context) =>
+          authData.isAuth ? CartScreen() : AuthScreen(),
+      OrdersScreen.routeName: (context) =>
+          authData.isAuth ? OrdersScreen() : AuthScreen(),
+      ManageProductScreen.routeName: (context) =>
+          authData.isAuth ? ManageProductScreen() : AuthScreen(),
+      EditProductScreen.routeName: (context) =>
+          authData.isAuth ? EditProductScreen() : AuthScreen(),
+    };
   }
 }

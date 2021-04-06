@@ -96,7 +96,6 @@ class MainDrawer extends StatelessWidget {
             function: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushReplacementNamed('/');
-
               Provider.of<Auth>(context, listen: false).logOut();
             }),
       ],
