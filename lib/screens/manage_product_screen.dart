@@ -50,25 +50,22 @@ class ManageProductScreen extends StatelessWidget {
                       child: CircularProgressIndicator(),
                     );
                   } else {
-                    return RefreshIndicator(
-                      onRefresh: () => _refreshProducts(context),
-                      child: Consumer<Products>(
-                        builder: (ctx, providedProduct, _) => ListView.builder(
-                            itemCount: providedProduct.items.length,
-                            itemBuilder: (_, index) {
-                              return Column(
-                                children: [
-                                  EditItem(
-                                    id: providedProduct.items[index].id,
-                                    imgUrl:
-                                        providedProduct.items[index].imageUrl,
-                                    title: providedProduct.items[index].title,
-                                  ),
-                                  Divider(),
-                                ],
-                              );
-                            }),
-                      ),
+                    return Consumer<Products>(
+                      builder: (ctx, providedProduct, _) => ListView.builder(
+                          itemCount: providedProduct.userItems.length,
+                          itemBuilder: (_, index) {
+                            return Column(
+                              children: [
+                                EditItem(
+                                  id: providedProduct.userItems[index].id,
+                                  imgUrl:
+                                      providedProduct.userItems[index].imageUrl,
+                                  title: providedProduct.userItems[index].title,
+                                ),
+                                Divider(),
+                              ],
+                            );
+                          }),
                     );
                   }
                 },

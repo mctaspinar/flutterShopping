@@ -10,6 +10,7 @@ class Products with ChangeNotifier {
   final String userId;
   Products(this.authToken, this.userId, this._items);
   List<Product> _items = [];
+  List<Product> _userItems = [];
 
   var _showFavorite = false;
 
@@ -19,6 +20,14 @@ class Products with ChangeNotifier {
       return _items.where((element) => element.isFavorite).toList();
     }
     return [..._items];
+  }
+
+  List<Product> get userItems {
+    if (_showFavorite) {
+      _showFavorite = !_showFavorite;
+      return _userItems.where((element) => element.isFavorite).toList();
+    }
+    return [..._userItems];
   }
 
   Future<void> addProduct(Product product) async {
@@ -32,6 +41,7 @@ class Products with ChangeNotifier {
           'description': product.description,
           'imageUrl': product.imageUrl,
           'price': product.price,
+          'creatorId': userId,
         }),
       );
 
@@ -46,6 +56,7 @@ class Products with ChangeNotifier {
             .decode(response.body)['name'], //generated unique id from firebase
       );
       _items.insert(0, newProduct);
+      _userItems.insert(0, newProduct);
       notifyListeners();
     } catch (error) {
       throw error;
@@ -78,7 +89,11 @@ class Products with ChangeNotifier {
           ),
         );
       });
-      _items = tempList;
+      if (filter) {
+        _userItems = tempList.reversed.toList();
+      } else {
+        _items = tempList;
+      }
       notifyListeners();
     } catch (error) {
       throw error;
@@ -100,9 +115,11 @@ class Products with ChangeNotifier {
     }).catchError((_) {
       //if an error occured rollback will go on..
       _items.insert(existingProductIndex, existingProduct);
+      _userItems.insert(existingProductIndex, existingProduct);
       notifyListeners();
     });
     _items.removeAt(existingProductIndex);
+    _userItems.removeAt(existingProductIndex);
     notifyListeners();
   }
 
@@ -118,6 +135,8 @@ class Products with ChangeNotifier {
 
   Future<void> updateProduct(String id, Product product) async {
     final productIndex = _items.indexWhere((element) => element.id == id);
+    final userProductIndex =
+        _userItems.indexWhere((element) => element.id == id);
     if (productIndex >= 0) {
       Uri url = Uri.parse(
           "https://shopping-project-d3268-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken");
@@ -129,6 +148,7 @@ class Products with ChangeNotifier {
             'imageUrl': product.imageUrl,
           }));
       _items[productIndex] = product;
+      _userItems[userProductIndex] = product;
       notifyListeners();
     } else {}
   }

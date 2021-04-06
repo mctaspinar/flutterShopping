@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping/providers/products_provider.dart';
+import 'package:flutter_shopping/screens/manage_product_screen.dart';
 import 'package:provider/provider.dart';
 import '../widgets/products_gridView.dart';
 import '../widgets/app_bar.dart';
@@ -19,15 +20,8 @@ class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
     scaffoldKey.currentState.openDrawer();
   }
 
-  Future _future;
-  Future getFuture() {
-    return Provider.of<Products>(context, listen: false).getAllProducts();
-  }
-
-  @override
-  void initState() {
-    _future = getFuture();
-    super.initState();
+  Future getFuture(BuildContext context) {
+    return Provider.of<Products>(context, listen: false).getAllProducts(false);
   }
 
   @override
@@ -53,7 +47,7 @@ class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
               ),
               CategoriesBar(),
               FutureBuilder(
-                  future: _future,
+                  future: getFuture(context),
                   builder: (ctx, snapData) {
                     if (snapData.connectionState == ConnectionState.waiting) {
                       return Center(
