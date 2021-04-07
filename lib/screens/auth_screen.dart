@@ -11,30 +11,38 @@ class AuthScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Alışveriş Uygulaması"),
-        centerTitle: true,
-      ),
       body: Stack(
         children: <Widget>[
           SingleChildScrollView(
               child: Container(
-            color: Colors.white,
-            height: deviceSize.height -
-                AppBar().preferredSize.height -
-                MediaQuery.of(context).padding.top,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.orange[100],
+                  Colors.orange[300],
+                  Colors.orange[500],
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+            height: deviceSize.height,
             width: deviceSize.width,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: 10,
+                  height: deviceSize.height * .1,
                 ),
-                Column(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.shopping_basket_outlined,
                       size: 72,
+                    ),
+                    SizedBox(
+                      width: 20,
                     ),
                     Text(
                       'Alışveriş Uygulaması',
@@ -43,14 +51,11 @@ class AuthScreen extends StatelessWidget {
                         fontSize: 22,
                         fontWeight: FontWeight.w600,
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
                     )
                   ],
                 ),
                 SizedBox(
-                  height: 15,
+                  height: deviceSize.height * .1,
                 ),
                 Flexible(flex: 2, child: AuthCard()),
               ],
@@ -127,102 +132,108 @@ class _AuthCardState extends State<AuthCard> {
 
   @override
   Widget build(BuildContext context) {
-    var _borderError = OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20),
-        borderSide: BorderSide(color: Theme.of(context).errorColor),
-        gapPadding: 5);
-    var _border = OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20),
-        borderSide: BorderSide(color: Colors.black54),
-        gapPadding: 5);
-    var _errorColor =
-        TextStyle(color: Theme.of(context).errorColor, fontSize: 10);
+    var _errorColor = TextStyle(
+      color: Theme.of(context).errorColor,
+      fontSize: 10,
+    );
 
     return Container(
-      padding: EdgeInsets.all(20.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black,
+            blurRadius: 20.0,
+          ),
+        ],
+        color: Colors.amber[50],
+      ),
+      padding: EdgeInsets.only(top: 30, left: 20, right: 20),
       child: Form(
         key: _formKey,
         child: Column(
           children: <Widget>[
-            Container(
-              constraints: BoxConstraints(minHeight: 50, maxHeight: 75),
-              child: TextFormField(
-                decoration: InputDecoration(
-                    filled: true,
-                    prefixIcon: Icon(Icons.email_outlined),
-                    labelText: 'E-Mail',
-                    errorBorder: _borderError,
-                    errorStyle: _errorColor,
-                    border: _border),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value.isEmpty || !value.contains('@')) {
-                    return 'Hatalı email!';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _authData['email'] = value;
-                },
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-              constraints: BoxConstraints(minHeight: 50, maxHeight: 75),
-              child: TextFormField(
-                decoration: InputDecoration(
-                    filled: true,
-                    prefixIcon: Icon(Icons.lock_outlined),
-                    labelText: 'Şifre',
-                    errorBorder: _borderError,
-                    errorStyle: _errorColor,
-                    border: _border),
-                obscureText: true,
-                controller: _passwordController,
-                validator: (value) {
-                  if (value.isEmpty || value.length < 5) {
-                    return 'Şifreniz en az 6 karakterli olmalıdır!';
-                  }
-                },
-                onSaved: (value) {
-                  _authData['password'] = value;
-                },
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            //if (_authMode == AuthMode.Signup)
-            AnimatedContainer(
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeIn,
-              constraints: BoxConstraints(
-                  minHeight: _authMode == AuthMode.Signup ? 50 : 0,
-                  maxHeight: _authMode == AuthMode.Signup ? 75 : 0),
-              child: _authMode == AuthMode.Signup
-                  ? TextFormField(
-                      enabled: _authMode == AuthMode.Signup,
+            Card(
+              elevation: 7,
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(left: 10),
+                    constraints: BoxConstraints(minHeight: 50, maxHeight: 75),
+                    child: TextFormField(
                       decoration: InputDecoration(
-                          filled: true,
+                        prefixIcon: Icon(Icons.email_outlined),
+                        labelText: 'E-Mail',
+                        errorStyle: _errorColor,
+                        border: InputBorder.none,
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value.isEmpty || !value.contains('@')) {
+                          return 'Hatalı email!';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _authData['email'] = value;
+                      },
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(left: 10),
+                    constraints: BoxConstraints(minHeight: 50, maxHeight: 75),
+                    child: TextFormField(
+                      decoration: InputDecoration(
                           prefixIcon: Icon(Icons.lock_outlined),
-                          labelText: 'Şifre Tekrar',
-                          errorBorder: _borderError,
+                          labelText: 'Şifre',
                           errorStyle: _errorColor,
-                          border: _border),
+                          border: InputBorder.none),
                       obscureText: true,
-                      validator: _authMode == AuthMode.Signup
-                          ? (value) {
-                              if (value != _passwordController.text) {
-                                return 'Şifreler uyuşmamaktadır!';
-                              } else {
-                                return "";
-                              }
-                            }
-                          : null,
-                    )
-                  : null,
+                      controller: _passwordController,
+                      validator: (value) {
+                        if (value.isEmpty || value.length < 5) {
+                          return 'Şifreniz en az 6 karakterli olmalıdır!';
+                        }
+                      },
+                      onSaved: (value) {
+                        _authData['password'] = value;
+                      },
+                    ),
+                  ),
+                  //if (_authMode == AuthMode.Signup)
+                  AnimatedContainer(
+                    padding: const EdgeInsets.only(left: 10, bottom: 5),
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.easeIn,
+                    constraints: BoxConstraints(
+                        minHeight: _authMode == AuthMode.Signup ? 50 : 0,
+                        maxHeight: _authMode == AuthMode.Signup ? 75 : 0),
+                    child: _authMode == AuthMode.Signup
+                        ? TextFormField(
+                            enabled: _authMode == AuthMode.Signup,
+                            decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.lock_outlined),
+                                labelText: 'Şifre Tekrar',
+                                errorStyle: _errorColor,
+                                border: InputBorder.none),
+                            obscureText: true,
+                            validator: _authMode == AuthMode.Signup
+                                ? (value) {
+                                    if (value != _passwordController.text) {
+                                      return 'Şifreler uyuşmamaktadır!';
+                                    } else {
+                                      return "";
+                                    }
+                                  }
+                                : null,
+                          )
+                        : null,
+                  ),
+                ],
+              ),
             ),
             SizedBox(
               height: 15,
