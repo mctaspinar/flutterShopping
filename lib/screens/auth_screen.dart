@@ -25,28 +25,39 @@ class AuthScreen extends StatelessWidget {
                 MediaQuery.of(context).padding.top,
             width: deviceSize.width,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
-                Icon(
-                  Icons.shopping_basket_outlined,
-                  color: Theme.of(context).primaryColor,
-                  size: 96,
-                ),
-                Text(
-                  'Alışveriş Uygulaması',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600,
+                Container(
+                  color: Colors.white,
+                  padding: const EdgeInsets.all(10),
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.shopping_basket_outlined,
+                        size: 64,
+                      ),
+                      Text(
+                        'Alışveriş Uygulaması',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      )
+                    ],
                   ),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 15,
                 ),
-                AuthCard(),
+                Flexible(flex: 2, child: AuthCard()),
               ],
             ),
           )),
@@ -124,111 +135,120 @@ class _AuthCardState extends State<AuthCard> {
     var _borderError = OutlineInputBorder(
         borderRadius: BorderRadius.circular(20),
         borderSide: BorderSide(color: Theme.of(context).errorColor),
-        gapPadding: 10);
+        gapPadding: 5);
     var _border = OutlineInputBorder(
         borderRadius: BorderRadius.circular(20),
         borderSide: BorderSide(color: Colors.black54),
-        gapPadding: 10);
-    var _errorColor = TextStyle(color: Theme.of(context).errorColor);
+        gapPadding: 5);
+    var _errorColor =
+        TextStyle(color: Theme.of(context).errorColor, fontSize: 10);
+
     return Container(
-      padding: EdgeInsets.all(25.0),
+      padding: EdgeInsets.all(20.0),
       child: Form(
         key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
+        child: Column(
+          children: <Widget>[
+            TextFormField(
+              decoration: InputDecoration(
+                  filled: true,
+                  prefixIcon: Icon(Icons.email_outlined),
+                  labelText: 'E-Mail',
+                  errorBorder: _borderError,
+                  errorStyle: _errorColor,
+                  border: _border),
+              keyboardType: TextInputType.emailAddress,
+              validator: (value) {
+                if (value.isEmpty || !value.contains('@')) {
+                  return 'Hatalı email!';
+                }
+                return null;
+              },
+              onSaved: (value) {
+                _authData['email'] = value;
+              },
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            TextFormField(
+              decoration: InputDecoration(
+                  filled: true,
+                  prefixIcon: Icon(Icons.lock_outlined),
+                  labelText: 'Şifre',
+                  errorBorder: _borderError,
+                  errorStyle: _errorColor,
+                  border: _border),
+              obscureText: true,
+              controller: _passwordController,
+              validator: (value) {
+                if (value.isEmpty || value.length < 5) {
+                  return 'Şifreniz en az 6 karakterli olmalıdır!';
+                }
+              },
+              onSaved: (value) {
+                _authData['password'] = value;
+              },
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            if (_authMode == AuthMode.Signup)
               TextFormField(
+                enabled: _authMode == AuthMode.Signup,
                 decoration: InputDecoration(
-                    labelText: 'E-Mail',
-                    errorBorder: _borderError,
-                    errorStyle: _errorColor,
-                    border: _border),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value.isEmpty || !value.contains('@')) {
-                    return 'Hatalı email!';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _authData['email'] = value;
-                },
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                    labelText: 'Şifre',
+                    filled: true,
+                    prefixIcon: Icon(Icons.lock_outlined),
+                    labelText: 'Şifre Tekrar',
                     errorBorder: _borderError,
                     errorStyle: _errorColor,
                     border: _border),
                 obscureText: true,
-                controller: _passwordController,
-                validator: (value) {
-                  if (value.isEmpty || value.length < 5) {
-                    return 'Şifreniz en az 6 karakterli olmalıdır!';
-                  }
-                },
-                onSaved: (value) {
-                  _authData['password'] = value;
-                },
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              if (_authMode == AuthMode.Signup)
-                TextFormField(
-                  enabled: _authMode == AuthMode.Signup,
-                  decoration: InputDecoration(
-                      labelText: 'Şifre Tekrar',
-                      errorBorder: _borderError,
-                      errorStyle: _errorColor,
-                      border: _border),
-                  obscureText: true,
-                  validator: _authMode == AuthMode.Signup
-                      ? (value) {
-                          if (value != _passwordController.text) {
-                            return 'Şifreler uyuşmamaktadır!';
-                          }
+                validator: _authMode == AuthMode.Signup
+                    ? (value) {
+                        if (value != _passwordController.text) {
+                          return 'Şifreler uyuşmamaktadır!';
                         }
-                      : null,
-                ),
-              SizedBox(
-                height: 20,
+                      }
+                    : null,
               ),
-              if (_isLoading)
-                CircularProgressIndicator()
-              else
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: ElevatedButton(
-                    child: Text(
-                        _authMode == AuthMode.Login ? 'GİRİŞ YAP' : 'ÜYE OL'),
-                    onPressed: _submit,
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
-                      primary: Theme.of(context).primaryColor,
-                      onPrimary: Colors.white,
-                    ),
+            SizedBox(
+              height: 15,
+            ),
+            if (_isLoading)
+              CircularProgressIndicator()
+            else
+              ElevatedButton(
+                child:
+                    Text(_authMode == AuthMode.Login ? 'GİRİŞ YAP' : 'ÜYE OL'),
+                onPressed: _submit,
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(MediaQuery.of(context).size.width * .7, 40),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
                   ),
+                  primary: Theme.of(context).primaryColor,
+                  onPrimary: Colors.white,
                 ),
-              TextButton(
-                child: Text(
-                    '${_authMode == AuthMode.Login ? 'Üye ol' : 'Giriş yap'}'),
-                onPressed: _switchAuthMode,
-                style: TextButton.styleFrom(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    primary: Theme.of(context).primaryColor),
               ),
-            ],
-          ),
+            SizedBox(
+              height: 15,
+            ),
+            OutlinedButton(
+              child: Text(
+                  '${_authMode == AuthMode.Login ? 'ÜYE OL' : 'GİRİŞ YAP'}'),
+              onPressed: _switchAuthMode,
+              style: OutlinedButton.styleFrom(
+                  minimumSize: Size(MediaQuery.of(context).size.width * .7, 40),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  primary: Theme.of(context).primaryColor,
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  side: BorderSide(color: Theme.of(context).primaryColor)),
+            ),
+          ],
         ),
       ),
     );
