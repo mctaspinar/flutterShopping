@@ -134,7 +134,7 @@ class _AuthCardState extends State<AuthCard> {
   Widget build(BuildContext context) {
     var _errorColor = TextStyle(
       color: Theme.of(context).errorColor,
-      fontSize: 10,
+      fontSize: 12,
     );
 
     return Container(
@@ -183,7 +183,7 @@ class _AuthCardState extends State<AuthCard> {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.only(left: 10),
+                    padding: const EdgeInsets.only(left: 10, bottom: 10),
                     constraints: BoxConstraints(minHeight: 50, maxHeight: 75),
                     child: TextFormField(
                       decoration: InputDecoration(
