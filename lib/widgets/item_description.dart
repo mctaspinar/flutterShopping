@@ -58,14 +58,16 @@ class _ItemDescriptionState extends State<ItemDescription> {
                 Text('Fiyat ${widget.product.price} ₺',
                     style: theme.textTheme.bodyText1),
                 ElevatedButton.icon(
-                  onPressed: () {
-                    cart.addItem(
-                      widget.product.id,
-                      widget.product.price,
-                      widget.product.title,
-                    );
-                    _submit();
-                  },
+                  onPressed: _loading
+                      ? null
+                      : () {
+                          cart.addItem(
+                            widget.product.id,
+                            widget.product.price,
+                            widget.product.title,
+                          );
+                          _submit();
+                        },
                   icon: Icon(
                     _loading
                         ? Icons.shopping_cart

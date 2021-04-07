@@ -21,36 +21,34 @@ class ProductDetailScreen extends StatelessWidget {
     final mediaQuery = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
-          child: SingleChildScrollView(
-        child: Stack(
-          children: [
-            ShowItemPic(
+          child: Stack(
+        children: [
+          ShowItemPic(
+            product: productItem,
+          ),
+          Positioned(
+            left: 0,
+            top: 0,
+            child: CustomAppBar(
+              iconData: Icons.arrow_back,
+              toDo: _toDoFunction,
+              title: productItem.title,
+              textStyle: Theme.of(context)
+                  .textTheme
+                  .headline6
+                  .copyWith(color: Colors.black),
+              popupMenuButton: false,
+              alignment: MainAxisAlignment.start,
+            ),
+          ),
+          Positioned(
+            bottom: mediaQuery.height * .1,
+            right: 0,
+            child: ItemDescription(
               product: productItem,
             ),
-            Positioned(
-              left: 0,
-              top: 0,
-              child: CustomAppBar(
-                iconData: Icons.arrow_back,
-                toDo: _toDoFunction,
-                title: productItem.title,
-                textStyle: Theme.of(context)
-                    .textTheme
-                    .headline6
-                    .copyWith(color: Colors.black54),
-                popupMenuButton: false,
-                alignment: MainAxisAlignment.start,
-              ),
-            ),
-            Positioned(
-              bottom: mediaQuery.height * .1,
-              right: 0,
-              child: ItemDescription(
-                product: productItem,
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       )),
     );
   }
