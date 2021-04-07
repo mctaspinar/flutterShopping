@@ -196,6 +196,8 @@ class _AuthCardState extends State<AuthCard> {
                       validator: (value) {
                         if (value.isEmpty || value.length < 5) {
                           return 'Şifreniz en az 6 karakterli olmalıdır!';
+                        } else {
+                          return null;
                         }
                       },
                       onSaved: (value) {
